@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
+const { Chat } = require('../models/chat');
+const Payment = require('../models/payment');
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -9,6 +11,16 @@ const connectDB = async () => {
     }
 
     await mongoose.connect(MONGODB_URI);
+
+    for (const model of [Chat, Payment]) {
+        const collectionExists = await mongoose.connection.db
+            .listCollections({ name: model.collection.name })
+            .hasNext();
+
+        if (!collectionExists) {
+            await model.createCollection();
+        }
+    }
 };
 
 

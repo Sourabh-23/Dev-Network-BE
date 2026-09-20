@@ -76,9 +76,14 @@ const userSchema = new mongoose.Schema({
         }
     }
 }, {
-    timestamps: true   
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 
+userSchema.virtual('photoUrl').get(function () {
+    return this.photourl;
+});
 
 //7
 userSchema.methods.getJwt = async function() {
