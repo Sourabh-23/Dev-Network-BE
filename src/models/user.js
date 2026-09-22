@@ -57,9 +57,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
         validate(value) {
-            if(!validator.isURL(value)) {
+            const isRemoteUrl = validator.isURL(value, { protocols: ['http', 'https'] });
+            const isImageDataUrl = /^data:image\/(png|jpe?g|webp|gif);base64,[a-z0-9+/=]+$/i.test(value);
+
+            if (!isRemoteUrl && !isImageDataUrl) {
                 throw new Error("Invalid URL");
-            }   
+            }
         }
     },
     about: {

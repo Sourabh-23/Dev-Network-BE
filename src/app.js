@@ -16,7 +16,9 @@ app.use(
     credentials: true
 }));
 
-app.use(express.json());
+// Profile images are compressed in the web client before being sent as data URLs.
+// Keep a strict upper bound while allowing those small profile-photo requests.
+app.use(express.json({ limit: '2mb' }));
 app.use(cookieParser());
 
 app.use("/", authRouter);
